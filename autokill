@@ -1,0 +1,89 @@
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local LocalPlayer = Players.LocalPlayer
+local scriptRunning = false
+local loopCount = 0
+local event = ReplicatedStorage:WaitForChild("Events"):WaitForChild("ShootEvent")
+local function buildArgs(characterName)
+    local args = {
+        [1] = {
+            Vector3.new(492.1162109375, 128.9127960205078, -2691.913330078125),
+            Vector3.new(492.0210266113281, 128.947509765625, -2691.998046875),
+            Vector3.new(491.8211975097656, 128.8511962890625, -2692.176025390625),
+            Vector3.new(492.0777893066406, 129.028564453125, -2691.947509765625),
+            Vector3.new(491.8556823730469, 128.9158477783203, -2692.145263671875),
+            Vector3.new(491.8928527832031, 128.9654998779297, -2692.112060546875),
+            Vector3.new(491.96746826171875, 128.85809326171875, -2692.045654296875)
+        },
+        [2] = {
+            Vector3.new(483.7306823730469, 128.9998016357422, -2682.28125),
+            Vector3.new(483.7306823730469, 128.9998016357422, -2682.28125),
+            Vector3.new(483.7306823730469, 128.9998016357422, -2682.28125),
+            Vector3.new(483.7306823730469, 128.9998016357422, -2682.28125),
+            Vector3.new(483.7306823730469, 128.9998016357422, -2682.28125),
+            Vector3.new(483.7306823730469, 128.9998016357422, -2682.28125),
+            Vector3.new(483.7306823730469, 128.9998016357422, -2682.28125)
+        },
+        [3] = {
+            workspace.Characters[characterName].Head,
+            workspace.Characters[characterName].Head,
+            workspace.Characters[characterName].Head,
+            workspace.Characters[characterName].Head,
+            workspace.Characters[characterName].Head,
+            workspace.Characters[characterName].Head,
+            workspace.Characters[characterName].Head
+        },
+        [4] = {
+            Vector3.new(492.1162109375, 128.9127960205078, -2691.913330078125),
+            Vector3.new(492.0210266113281, 128.947509765625, -2691.998046875),
+            Vector3.new(491.8211975097656, 128.8511962890625, -2692.176025390625),
+            Vector3.new(492.0777893066406, 129.028564453125, -2691.947509765625),
+            Vector3.new(491.8556823730469, 128.9158477783203, -2692.145263671875),
+            Vector3.new(491.8928527832031, 128.9654998779297, -2692.112060546875),
+            Vector3.new(491.96746826171875, 128.85809326171875, -2692.045654296875)
+        },
+        [5] = {
+            Vector3.new(-0.6650652885437012, 0, 0.7467852234840393),
+            Vector3.new(-0.6650652885437012, 0, 0.7467852234840393),
+            Vector3.new(-0.6650652885437012, 0, 0.7467852234840393),
+            Vector3.new(-0.6650652885437012, 0, 0.7467852234840393),
+            Vector3.new(-0.6650652885437012, 0, 0.7467852234840393),
+            Vector3.new(-0.6650652885437012, 0, 0.7467852234840393),
+            Vector3.new(-0.6650652885437012, 0, 0.7467852234840393)
+        },
+        [6] = {
+            Enum.Material.Plastic,
+            Enum.Material.Plastic,
+            Enum.Material.Plastic,
+            Enum.Material.Plastic,
+            Enum.Material.Plastic,
+            Enum.Material.Plastic,
+            Enum.Material.Plastic
+        }
+    }
+    return args
+end
+local function runScript() 
+    while scriptRunning do
+        local charactersFolder = workspace:WaitForChild("Characters")
+        local characters = charactersFolder:GetChildren()
+        local characterNames = {}
+        for _, character in ipairs(characters) do
+            if character:FindFirstChild("Head") then
+                table.insert(characterNames, character.Name)
+            end
+        end
+        for _, characterName in ipairs(characterNames) do
+            local args = buildArgs(characterName)
+            event:FireServer(unpack(args))
+        end
+        loopCount = loopCount + 1
+        if loopCount >= 7 then
+            loopCount = 0
+            game:GetService("ReplicatedStorage").Events.ReloadEvent:FireServer()
+        end
+        wait(1)
+    end
+end
+scriptRunning = true
+runScript()
