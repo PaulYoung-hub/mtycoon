@@ -1,0 +1,56 @@
+local destinations = {
+    Vector3.new(1433, 98, -2432),
+    Vector3.new(503, 111, -2661),
+    Vector3.new(-801, 111, -2656),
+    Vector3.new(-1553, 111, -2624),
+    Vector3.new(-1969, 111, -2154),
+    Vector3.new(-1544, 111, -1581),
+    Vector3.new(-993, 115, -1757),
+    Vector3.new(-2326, 115, -1390),
+    Vector3.new(-2189, 115, -58),
+    Vector3.new(-1522, 115, 86),
+    Vector3.new(-2000, 115, 687),
+    Vector3.new(-1324, 115, 679),
+    Vector3.new(-1406, 115, 1443),
+    Vector3.new(-648, 115, 1732),
+    Vector3.new(620, 115, 1850),
+    Vector3.new(598, 115, 1210),
+    Vector3.new(1334, 115, 1513),
+    Vector3.new(1209, 115, 824),
+    Vector3.new(1850, 115, 604),
+    Vector3.new(2012, 115, -726),
+    Vector3.new(1307, 115, -761),
+    Vector3.new(1908, 115, -1723),
+    Vector3.new(13, 115, -441),
+    Vector3.new(28, 794, -432)
+}
+
+local function teleportationLoop()
+  while true do
+    local joueur = game.Players.LocalPlayer
+    if joueur and joueur.Character and joueur.Character:FindFirstChild("HumanoidRootPart") then
+      for i, destination in ipairs(destinations) do
+        local origine = joueur.Character.HumanoidRootPart.Position
+        local distance = (destination - origine).Magnitude
+        local direction = (destination - origine).Unit
+        local vitesse = 100
+        local tempsNecessaire = distance / vitesse
+        for j = 0, tempsNecessaire, 0.1 do
+            local nouvellePosition = origine + direction * (j * vitesse)
+            if joueur.Character and joueur.Character:FindFirstChild("HumanoidRootPart") then
+                joueur.Character.HumanoidRootPart.CFrame = CFrame.new(nouvellePosition)
+            end
+            wait(0.1)
+        end
+
+        if joueur.Character and joueur.Character:FindFirstChild("HumanoidRootPart") then
+            joueur.Character.HumanoidRootPart.CFrame = CFrame.new(destination)
+        end
+        wait(10)
+      end
+    else
+      wait(1)
+    end
+  end
+end
+teleportationLoop()
